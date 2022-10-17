@@ -70,7 +70,7 @@ public class Browser {
 				if (System.getProperty("os.name").contains("win")) {
 					path = "bin/FirefoxPortable/App/Firefox/firefox.exe";
 				} else {
-					path = "bin/Firefox.app/Contents/MacOS/firefox";
+					path = "usr/bin/Firefox";
 				}
 				return new FirefoxDriver(new FirefoxBinary(new File(path)), new FirefoxProfile());
 			}
