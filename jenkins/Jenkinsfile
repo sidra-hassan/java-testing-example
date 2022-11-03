@@ -8,6 +8,13 @@ pipeline {
                 sh 'mvn --version'
             }
         }
+        stage ('Scan and Build Jar File') {
+            steps {
+               withSonarQubeEnv(installationName: 'Sonarqube', credentialsId: '123') {
+                sh 'mvn clean verify sonar:sonar'
+                }
+            }
+        }
         stage ('build'){
             steps {
                 sh 'mvn install'
@@ -18,12 +25,26 @@ pipeline {
             sh 'mvn test'
             }
         }
+        
     }   
-            post{
-                always{
-                    archiveArtifacts artifacts: '**/*.jar', fingerprint: true
+        post{
+            success{
+                archiveArtifacts artifacts: '**/*.jar', fingerprint: false
+                sh '''
+                    #!bin/bash
+                    FILE=/var/lib/jenkins/workspace/sonar-test/example-0.0.1-SNAPSHOT.zip
+                    if test -f "$FILE"; then
+                        rm -rf $FILE
+                    else
+                        echo "$FILE not exists"
+                    fi
+                '''    
+                zip zipFile: 'example-0.0.1-SNAPSHOT.zip', archive: true, dir: '/var/lib/jenkins/workspace/sonar-test/example/target'
+                sshagent (credentials: ['ssh-pass']) {
+                    sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/sonar-test/example-0.0.1-SNAPSHOT.zip  ubuntu@18.204.21.87:/home/ubuntu/test'
+                    sh "ssh -tt -o StrictHostKeyChecking=no ubuntu@18.204.21.87 'unzip /home/ubuntu/test/example-0.0.1-SNAPSHOT.zip' " 
                 }
             }
-        
-    
+        }
+
 }
