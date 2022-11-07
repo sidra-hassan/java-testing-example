@@ -19,7 +19,6 @@
           <module>example-cucumber</module>
           <module>bank-ocr</module>
           <module>gilded-rose</module>
-          <module>game-of-life</module>
-	  <module>selenium</module>	
+          <module>game-of-life</module>	
 	</modules>
 </project>
