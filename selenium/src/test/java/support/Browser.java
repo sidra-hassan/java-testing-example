@@ -78,7 +78,7 @@ public class Browser {
 			try {
 				return new ChromeDriver();
 			} catch (Exception e) {
-				System.setProperty("webdriver.chrome.driver", "usr/bin/chromedriver");
+				System.setProperty("webdriver.chrome.driver", "bin/chromedriver.exe");
 				return new ChromeDriver();
 			}
 		} else if (browserName.equals("msie")) {
